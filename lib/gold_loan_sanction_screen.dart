@@ -110,8 +110,8 @@ class _GoldLoanSanctionScreenState extends State<GoldLoanSanctionScreen> {
             Table(
               border: TableBorder.all(color: Colors.black, width: 0.5),
               columnWidths: const {
-                0: FlexColumnWidth(2.5),
-                1: FlexColumnWidth(1.5),
+                0: FlexColumnWidth(1.0),
+                1: FlexColumnWidth(3.0),
               },
               children: [
                 _buildFormRow('Branch Name'),
