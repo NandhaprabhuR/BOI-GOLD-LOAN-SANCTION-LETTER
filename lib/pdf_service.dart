@@ -45,7 +45,7 @@ class PdfService {
               _buildKfsTable(mainData),
               pw.SizedBox(height: 30), // Force APR Factsheet onto its own page (Page 4)
               _buildAprFactsheet(mainData),
-              pw.SizedBox(height: 10), // Minimal gap instead of forced page break
+              pw.SizedBox(height: 5), // Minimal gap instead of forced page break
               _buildPostSanctionReport(mainData),
             ];
           },
@@ -1413,8 +1413,8 @@ class PdfService {
               children: [
                 pw.Expanded(
                   child: pw.Container(
-                    height: 40,
-                    padding: const pw.EdgeInsets.all(2),
+                    height: 20,
+                    padding: const pw.EdgeInsets.all(1),
                     alignment: pw.Alignment.topLeft,
                     child: pw.Text('Inspection Findings', style: pw.TextStyle(fontSize: 10.0)),
                   ),
@@ -1424,9 +1424,9 @@ class PdfService {
             ),
             pw.TableRow(
               children: [
-                pw.SizedBox(height: 30),
+                pw.SizedBox(height: 26),
                 pw.Container(
-                  height: 30,
+                  height: 26,
                   alignment: pw.Alignment.bottomCenter,
                   child: pw.Text('Signature of the Inspecting Officer', style: pw.TextStyle(fontSize: 10.0)),
                 ),
@@ -1442,11 +1442,11 @@ class PdfService {
     return pw.TableRow(
       children: [
         pw.Padding(
-          padding: const pw.EdgeInsets.all(1.5),
+          padding: const pw.EdgeInsets.symmetric(horizontal: 0.5, vertical: 0.2),
           child: pw.Text(label, style: pw.TextStyle(fontSize: 10.0)),
         ),
         pw.Padding(
-          padding: const pw.EdgeInsets.all(1.5),
+          padding: const pw.EdgeInsets.symmetric(horizontal: 0.5, vertical: 0.2),
           child: pw.Text(value, style: pw.TextStyle(fontWeight: pw.FontWeight.bold, fontSize: 10.0)),
         ),
       ],
