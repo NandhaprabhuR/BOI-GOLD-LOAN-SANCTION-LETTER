@@ -43,7 +43,7 @@ class PdfService {
               _buildSection3(mainData),
               _buildGoldDetailsPdfRow(goldData), 
               _buildTermsPdfRow(),
-              pw.SizedBox(height: 225), // Force KFS onto a new page (Page 3)
+              pw.SizedBox(height: 265), // Force KFS onto a new page (Page 3)
               _buildKfsHeader(),
               _buildKfsTable(mainData),
               pw.SizedBox(height: 150), // Force APR Factsheet onto its own page (Page 4)
@@ -151,14 +151,8 @@ class PdfService {
 
   static pw.Widget _buildSection2(Map<String, String> data) {
     return pw.Table(
-      border: pw.TableBorder(
-        left: const pw.BorderSide(width: 0.5),
-        right: const pw.BorderSide(width: 0.5),
-        bottom: const pw.BorderSide(width: 0.5),
-        verticalInside: const pw.BorderSide(width: 0.5),
-        horizontalInside: const pw.BorderSide(width: 0.5),
-      ),
-      columnWidths: {0: const pw.FlexColumnWidth(0.7), 1: const pw.FlexColumnWidth(2.3)},
+      border: pw.TableBorder.all(width: 0.5),
+      columnWidths: {0: const pw.FlexColumnWidth(0.4), 1: const pw.FlexColumnWidth(2.6)},
       children: [
         pw.TableRow(
           children: [
@@ -229,22 +223,29 @@ class PdfService {
   return pw.Column(
     children: [
       pw.Table(
-        border: const pw.TableBorder(
-          left: pw.BorderSide(width: 0.5),
-          right: pw.BorderSide(width: 0.5),
-          bottom: pw.BorderSide(width: 0.5),
-          verticalInside: pw.BorderSide(width: 0.5),
-          horizontalInside: pw.BorderSide(width: 0.5),
-        ),
-        columnWidths: {0: const pw.FlexColumnWidth(1.0), 1: const pw.FlexColumnWidth(2.0)},
+        border: pw.TableBorder.all(width: 0.5),
+        columnWidths: {0: const pw.FlexColumnWidth(0.7), 1: const pw.FlexColumnWidth(2.3)},
         children: [
           _buildDataRow('Processing Charges', data['Processing Charges'] ?? ''),
           _buildDataRow('Gold Appraiser Charges', data['Gold Appraiser Charges'] ?? ''),
+        ],
+      ),
+      pw.Table(
+        border: pw.TableBorder.all(width: 0.5),
+        columnWidths: {0: const pw.FlexColumnWidth(0.25), 1: const pw.FlexColumnWidth(2.75)},
+        children: [
           pw.TableRow(
             children: [
               pw.Padding(
                 padding: const pw.EdgeInsets.all(1.5),
-                child: pw.Text('Safe Keeping Charges:', style: pw.TextStyle(fontSize: 9)),
+                child: pw.Column(
+                  crossAxisAlignment: pw.CrossAxisAlignment.start,
+                  children: [
+                    pw.Text('Safe', style: pw.TextStyle(fontSize: 9)),
+                    pw.Text('Keeping', style: pw.TextStyle(fontSize: 9)),
+                    pw.Text('Charges:', style: pw.TextStyle(fontSize: 9)),
+                  ],
+                ),
               ),
               pw.Column(
                 crossAxisAlignment: pw.CrossAxisAlignment.start,
@@ -296,13 +297,7 @@ class PdfService {
         ],
       ),
       pw.Table(
-        border: const pw.TableBorder(
-          left: pw.BorderSide(width: 0.5),
-          right: pw.BorderSide(width: 0.5),
-          bottom: pw.BorderSide(width: 0.5),
-          verticalInside: pw.BorderSide(width: 0.5),
-          horizontalInside: pw.BorderSide(width: 0.5),
-        ),
+        border: pw.TableBorder.all(width: 0.5),
         columnWidths: {0: const pw.FlexColumnWidth(2.3), 1: const pw.FlexColumnWidth(0.7)},
         children: [
           _buildDataRow('Charges related to issuing of notices for repayment, recovery or auction etc.', data['Notices Charges'] ?? ''),
@@ -317,20 +312,14 @@ class PdfService {
 }
   static pw.Widget _buildGoldDetailsPdfRow(List<Map<String, String>> goldData) {
     return pw.Table(
-      border: pw.TableBorder(
-        left: const pw.BorderSide(width: 0.5),
-        right: const pw.BorderSide(width: 0.5),
-        bottom: const pw.BorderSide(width: 0.5),
-        verticalInside: const pw.BorderSide(width: 0.5),
-        horizontalInside: const pw.BorderSide(width: 0.5),
-      ),
-      columnWidths: {0: const pw.FlexColumnWidth(0.7), 1: const pw.FlexColumnWidth(2.3)},
+      border: pw.TableBorder.all(width: 0.5),
+      columnWidths: {0: const pw.FlexColumnWidth(0.4), 1: const pw.FlexColumnWidth(2.6)},
       children: [
         pw.TableRow(
           children: [
             pw.Padding(
               padding: const pw.EdgeInsets.all(1.5),
-              child: pw.Text('Details of pledged Gold Ornaments/Coins', style: pw.TextStyle(fontSize: 9)),
+              child: pw.Text('Details of pledged Gold Ornaments/Coins', style: pw.TextStyle(fontSize: 8.5)),
             ),
             pw.Table(
               border: pw.TableBorder.all(width: 0.5),
@@ -409,20 +398,22 @@ class PdfService {
     return pw.Column(
       children: [
         pw.Table(
-          border: pw.TableBorder(
-            left: const pw.BorderSide(width: 0.5),
-            right: const pw.BorderSide(width: 0.5),
-            bottom: const pw.BorderSide(width: 0.5),
-            verticalInside: const pw.BorderSide(width: 0.5),
-            horizontalInside: const pw.BorderSide(width: 0.5),
-          ),
-          columnWidths: {0: const pw.FlexColumnWidth(0.7), 1: const pw.FlexColumnWidth(2.3)},
+          border: pw.TableBorder.all(width: 0.5),
+          columnWidths: {0: const pw.FlexColumnWidth(0.25), 1: const pw.FlexColumnWidth(2.65)},
           children: [
             pw.TableRow(
               children: [
                 pw.Padding(
                   padding: const pw.EdgeInsets.all(1.5),
-                  child: pw.Text('Other Terms and Condition', style: pw.TextStyle(fontSize: 9)),
+                  child: pw.Column(
+                    crossAxisAlignment: pw.CrossAxisAlignment.start,
+                    children: [
+                      pw.Text('Other', style: pw.TextStyle(fontSize: 9)),
+                      pw.Text('Terms', style: pw.TextStyle(fontSize: 9)),
+                      pw.Text('and', style: pw.TextStyle(fontSize: 9)),
+                      pw.Text('Condition', style: pw.TextStyle(fontSize: 9)),
+                    ],
+                  ),
                 ),
                 pw.Padding(
                   padding: const pw.EdgeInsets.all(1),
@@ -446,11 +437,7 @@ class PdfService {
         pw.Container(
           width: double.infinity,
           decoration: pw.BoxDecoration(
-            border: pw.Border(
-              left: const pw.BorderSide(width: 0.5),
-              right: const pw.BorderSide(width: 0.5),
-              bottom: const pw.BorderSide(width: 0.5),
-            ),
+            border: pw.Border.all(width: 0.5),
           ),
           padding: const pw.EdgeInsets.all(1.5),
           child: pw.Column(
@@ -468,12 +455,7 @@ class PdfService {
           ),
         ),
         pw.Table(
-          border: pw.TableBorder(
-            left: const pw.BorderSide(width: 0.5),
-            right: const pw.BorderSide(width: 0.5),
-            bottom: const pw.BorderSide(width: 0.5),
-            verticalInside: const pw.BorderSide(width: 0.5),
-          ),
+          border: pw.TableBorder.all(width: 0.5),
           children: [
             pw.TableRow(
               children: [
@@ -495,13 +477,7 @@ class PdfService {
           ],
         ),
         pw.Table(
-          border: pw.TableBorder(
-            left: const pw.BorderSide(width: 0.5),
-            right: const pw.BorderSide(width: 0.5),
-            bottom: const pw.BorderSide(width: 0.5),
-            verticalInside: const pw.BorderSide(width: 0.5),
-            horizontalInside: const pw.BorderSide(width: 0.5),
-          ),
+          border: pw.TableBorder.all(width: 0.5),
           children: [
             pw.TableRow(
               children: [
@@ -527,12 +503,7 @@ class PdfService {
           ],
         ),
         pw.Table(
-          border: pw.TableBorder(
-            left: const pw.BorderSide(width: 0.5),
-            right: const pw.BorderSide(width: 0.5),
-            bottom: const pw.BorderSide(width: 0.5),
-            verticalInside: const pw.BorderSide(width: 0.5),
-          ),
+          border: pw.TableBorder.all(width: 0.5),
           columnWidths: {
             0: const pw.FlexColumnWidth(0.5), // Date/Place label
             1: const pw.FlexColumnWidth(2.0), // Spacer box
@@ -1224,13 +1195,7 @@ class PdfService {
         ),
         // Parameters Table
         pw.Table(
-          border: const pw.TableBorder(
-            left: pw.BorderSide(width: 0.5),
-            right: pw.BorderSide(width: 0.5),
-            bottom: pw.BorderSide(width: 0.5),
-            verticalInside: pw.BorderSide(width: 0.5),
-            horizontalInside: pw.BorderSide(width: 0.5),
-          ),
+          border: pw.TableBorder.all(width: 0.5),
           columnWidths: {
             0: const pw.FlexColumnWidth(0.2), // Sr. No
             1: const pw.FlexColumnWidth(4.4), // Parameter
