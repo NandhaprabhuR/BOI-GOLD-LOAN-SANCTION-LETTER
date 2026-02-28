@@ -12,9 +12,9 @@ class PdfService {
       final mainData = data['main'] as Map<String, String>;
       final goldData = (data['gold'] as List).cast<Map<String, String>>();
 
-      debugPrint('Loading fonts from Google Fonts...');
-      final openSansFont = await PdfGoogleFonts.openSansRegular();
-      final openSansFontBold = await PdfGoogleFonts.openSansBold();
+      debugPrint('Loading local fallback fonts...');
+      final baseFont = pw.Font.helvetica();
+      final boldFont = pw.Font.helveticaBold();
 
       final hindiFontData = await rootBundle.load('assets/fonts/NotoSansDevanagari-Regular.ttf');
       final hindiFont = pw.Font.ttf(hindiFontData);
@@ -28,8 +28,8 @@ class PdfService {
           pageFormat: PdfPageFormat.a4,
           margin: const pw.EdgeInsets.symmetric(horizontal: 24, vertical: 20),
           theme: pw.ThemeData.withFont(
-            base: openSansFont,
-            bold: openSansFontBold,
+            base: baseFont,
+            bold: boldFont,
             fontFallback: [hindiFont, hindiFontBold],
           ),
           build: (pw.Context context) {
@@ -40,10 +40,10 @@ class PdfService {
               _buildSection3(mainData),
               _buildGoldDetailsPdfRow(goldData), 
               _buildTermsPdfRow(),
-              pw.SizedBox(height: 70), // Force KFS onto a new page (Page 3)
+              pw.SizedBox(height: 177), // Force KFS onto a new page (Page 3)
               _buildKfsHeader(),
               _buildKfsTable(mainData),
-              pw.SizedBox(height: 110), // Force APR Factsheet onto its own page (Page 4)
+              pw.SizedBox(height: 30), // Force APR Factsheet onto its own page (Page 4)
               _buildAprFactsheet(mainData),
               pw.SizedBox(height: 10), // Minimal gap instead of forced page break
               _buildPostSanctionReport(mainData),
@@ -507,9 +507,8 @@ class PdfService {
         pw.Table(
           border: pw.TableBorder.all(width: 0.5),
           columnWidths: {
-            0: const pw.FlexColumnWidth(0.5), // Date/Place label
-            1: const pw.FlexColumnWidth(2.0), // Spacer box
-            2: const pw.FlexColumnWidth(2.0), // Signature label box
+            0: const pw.FlexColumnWidth(1.0), // Date/Place label
+            1: const pw.FlexColumnWidth(2.0), // Signature label box
           },
           children: [
             pw.TableRow(
@@ -526,7 +525,6 @@ class PdfService {
                     ],
                   ),
                 ),
-                pw.SizedBox(height: 25),
                 pw.Container(
                   height: 30,
                   alignment: pw.Alignment.bottomCenter,
@@ -576,7 +574,9 @@ class PdfService {
   }
 
   static pw.Widget _buildKfsTable(Map<String, String> data) {
-    return pw.Table(
+    return pw.Column(
+      children: [
+        pw.Table(
           border: pw.TableBorder.all(width: 0.5),
           columnWidths: {
             0: const pw.FlexColumnWidth(0.15), // Sr. No
@@ -592,7 +592,7 @@ class PdfService {
                 pw.SizedBox(),
               ],
             ),
-            _buildKfsRow('1', 'Loan proposal/ account No.', data['Loan Account Number'] ?? '', 'Type of Loan', 'Retail/MSME', 2.2, 5.6, 1.4, 0.8),
+            _buildKfsRow('1', 'Loan proposal/ account No.', data['Loan Account Number'] ?? '', 'Type of Loan', 'Retail/MSME', 2.8, 4.8, 1.2, 1.2),
             _buildKfsRow('2', 'Sanctioned Loan amount (in Rupees)', data['Sanctioned Loan Amount'] ?? ''),
             _buildKfsRow('3', 'Disbursal schedule(i) Disbursement in stages or 100% upfront.', ''),
             _buildKfsRow('4', 'Loan term (year/months/days)', '${data['Loan Term in months'] ?? '---'} '),
@@ -812,19 +812,43 @@ class PdfService {
                             ),
                           ],
                         ),
+                      ],
+                    ),
+                    pw.Table(
+                      border: const pw.TableBorder(
+                        bottom: pw.BorderSide(width: 0.2),
+                        left: pw.BorderSide(width: 0.2),
+                        right: pw.BorderSide(width: 0.2),
+                        verticalInside: pw.BorderSide(width: 0.2),
+                        horizontalInside: pw.BorderSide(width: 0.2),
+                      ),
+                      columnWidths: {0: const pw.FlexColumnWidth(0.12), 1: const pw.FlexColumnWidth(0.60), 2: const pw.FlexColumnWidth(3.28)},
+                      children: [
                         pw.TableRow(
                           children: [
                             _buildCell('iii.'),
-                            _buildCell('Annual\nreview\ncharges'),
+                            _buildCell('Annual review charges'),
                             pw.Padding(
                               padding: const pw.EdgeInsets.all(0.2),
                               child: pw.Text(
                                 'If loan is not repaid within the stipulated time period, annual Review charges will be applicable which are equivalent to processing charges levied at the time of original sanction.',
-                                style: pw.TextStyle(fontSize: 10.0),
+                                style: pw.TextStyle(fontSize: 9.0),
                               ),
                             ),
                           ],
                         ),
+                      ],
+                    ),
+                    pw.Table(
+                      border: const pw.TableBorder(
+                        bottom: pw.BorderSide(width: 0.2),
+                        left: pw.BorderSide(width: 0.2),
+                        right: pw.BorderSide(width: 0.2),
+                        verticalInside: pw.BorderSide(width: 0.2),
+                        horizontalInside: pw.BorderSide(width: 0.2),
+                      ),
+                      columnWidths: {0: const pw.FlexColumnWidth(0.08), 1: const pw.FlexColumnWidth(0.32), 2: const pw.FlexColumnWidth(3.60)},
+                      children: [
                         pw.TableRow(
                           children: [
                             _buildCell('iv.'),
@@ -966,6 +990,7 @@ class PdfService {
               ],
             ),
             _buildKfsRow('11', 'Auction charges', 'Charges to be incurred during process of auction.', null, null, 40, 64),
+
             pw.TableRow(
               children: [
                 pw.Padding(
@@ -1065,7 +1090,9 @@ class PdfService {
               ],
             ),
           ],
-        );
+        ),
+      ],
+    );
   }
 
   static pw.TableRow _buildNumberedRow(String num, String label, String value) {
@@ -1100,6 +1127,7 @@ class PdfService {
       children: [
         _buildNumberCell(num),
         pw.Table(
+          border: const pw.TableBorder(verticalInside: pw.BorderSide(width: 0.5)),
           columnWidths: {
             0: pw.FlexColumnWidth(f1),
             1: pw.FlexColumnWidth(f2),
@@ -1110,18 +1138,15 @@ class PdfService {
             pw.TableRow(
               children: [
                 pw.Container(
-                  decoration: const pw.BoxDecoration(border: pw.Border(right: pw.BorderSide(width: 0.5))),
                   padding: const pw.EdgeInsets.all(0.2),
                   child: pw.Text(label, style: pw.TextStyle(fontSize: 10.0)),
                 ),
                 pw.Container(
-                  decoration: label2 != null ? const pw.BoxDecoration(border: pw.Border(right: pw.BorderSide(width: 0.5))) : null,
                   padding: const pw.EdgeInsets.all(0.2),
                   child: pw.Text(value, style: pw.TextStyle(fontWeight: pw.FontWeight.bold, fontSize: 10.0)),
                 ),
                 if (label2 != null) ...[
                   pw.Container(
-                    decoration: const pw.BoxDecoration(border: pw.Border(right: pw.BorderSide(width: 0.5))),
                     padding: const pw.EdgeInsets.all(0.2),
                     child: pw.Text(label2, style: pw.TextStyle(fontSize: 10.0)),
                   ),
@@ -1236,6 +1261,22 @@ class PdfService {
             _buildAprRow('7', 'Net disbursed amount (1-6)', ''),
             _buildAprRow('8', 'Total amount to be paid by the borrower (sum of 1 and 5)', ''),
             _buildAprRow('9', 'Annual Percentage rate- Effective annualized interest rate (in percentage)', data['APR'] ?? ''),
+          ],
+        ),
+        pw.Table(
+          border: const pw.TableBorder(
+            bottom: pw.BorderSide(width: 0.5),
+            left: pw.BorderSide(width: 0.5),
+            right: pw.BorderSide(width: 0.5),
+            verticalInside: pw.BorderSide(width: 0.5),
+            horizontalInside: pw.BorderSide(width: 0.5),
+          ),
+          columnWidths: {
+            0: const pw.FlexColumnWidth(0.2), // Sr. No
+            1: const pw.FlexColumnWidth(2.8), // Parameter
+            2: const pw.FlexColumnWidth(2.0), // Details
+          },
+          children: [
             pw.TableRow(
               children: [
                 _buildNumberCell('10'),
@@ -1243,7 +1284,24 @@ class PdfService {
                 _buildCell('Disbursement in stages or 100% upfront', fontSize: 10.0),
               ],
             ),
+          ],
+        ),
+        pw.Table(
+          border: const pw.TableBorder(
+            bottom: pw.BorderSide(width: 0.5),
+            left: pw.BorderSide(width: 0.5),
+            right: pw.BorderSide(width: 0.5),
+            verticalInside: pw.BorderSide(width: 0.5),
+            horizontalInside: pw.BorderSide(width: 0.5),
+          ),
+          columnWidths: {
+            0: const pw.FlexColumnWidth(0.2), // Sr. No
+            1: const pw.FlexColumnWidth(4.4), // Parameter
+            2: const pw.FlexColumnWidth(0.4), // Details
+          },
+          children: [
             _buildAprRow('11', 'Due date of payment of instalment and interest', ''),
+            _buildAprRow('11', 'Rate of interest for unhedged foreign currency loan', ''),
           ],
         ),
         pw.SizedBox(height: 2),
@@ -1252,28 +1310,32 @@ class PdfService {
           style: pw.TextStyle(fontSize: 10.0),
         ),
         pw.SizedBox(height: 5),
-        pw.Text('Repayment Schedule for EMI Loans:', style: pw.TextStyle(fontWeight: pw.FontWeight.bold, fontSize: 10.0)),
-        pw.Table(
-          border: pw.TableBorder.all(width: 0.5),
+        pw.Wrap(
           children: [
-            pw.TableRow(
+            pw.Text('Repayment Schedule for EMI Loans:', style: pw.TextStyle(fontWeight: pw.FontWeight.bold, fontSize: 10.0)),
+            pw.Table(
+              border: pw.TableBorder.all(width: 0.5),
               children: [
-                _buildCell('Instalment No.', isHeader: true),
-                _buildCell('Outstanding Principal', isHeader: true),
-                _buildCell('Principal', isHeader: true),
-                _buildCell('Interest', isHeader: true),
-                _buildCell('Instalment', isHeader: true),
+                pw.TableRow(
+                  children: [
+                    _buildCell('Instalment No.', isHeader: true),
+                    _buildCell('Outstanding Principal', isHeader: true),
+                    _buildCell('Principal', isHeader: true),
+                    _buildCell('Interest', isHeader: true),
+                    _buildCell('Instalment', isHeader: true),
+                  ],
+                ),
+                ...List.generate(12, (index) => pw.TableRow(
+                  children: [
+                    _buildCell('${index + 1}'),
+                    _buildCell(''),
+                    _buildCell(''),
+                    _buildCell(''),
+                    _buildCell(''),
+                  ],
+                )),
               ],
             ),
-            ...List.generate(12, (index) => pw.TableRow(
-              children: [
-                _buildCell('${index + 1}'),
-                _buildCell(''),
-                _buildCell(''),
-                _buildCell(''),
-                _buildCell(''),
-              ],
-            )),
           ],
         ),
       ],
@@ -1330,7 +1392,21 @@ class PdfService {
             pw.TableRow(
               children: [
                 _buildCell('End Use of the fund', textAlign: pw.TextAlign.left, fontSize: 10.0),
-                _buildCell('Satisfactory/Unsatisfactory', textAlign: pw.TextAlign.left, fontSize: 10.0),
+                pw.Row(
+                  children: [
+                    pw.Expanded(
+                      flex: 1,
+                      child: pw.Container(
+                        decoration: const pw.BoxDecoration(border: pw.Border(right: pw.BorderSide(width: 0.5))),
+                        child: _buildCell('Satisfactory', textAlign: pw.TextAlign.center, fontSize: 10.0),
+                      ),
+                    ),
+                    pw.Expanded(
+                      flex: 1,
+                      child: _buildCell('Unsatisfactory', textAlign: pw.TextAlign.center, fontSize: 10.0),
+                    ),
+                  ],
+                ),
               ],
             ),
             pw.TableRow(
